@@ -1,0 +1,53 @@
+---
+title: "midterm"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+# Set up:
+```{r, message=FALSE}
+library(tidyverse)
+library(drat)
+library(usmap)
+library(ggplot2)
+library(maps)
+library(dplyr)
+library(gridExtra)
+library(knitr)
+library(arm)
+library(stringr)
+library(data.table)
+addRepo("geanders")
+
+```
+
+
+```{r, message=FALSE}
+public<-read.csv("PublicAssistanceFundedProjectsDetails.csv",header = TRUE)
+public$county<-tolower(public$county)
+public$state<-tolower(public$state)
+public<-rename(public,region = state)
+public<-rename(public,subregion = county)
+
+```
+
+```{r}
+library(magrittr)
+counties_f <-(c("texas", "illinois","kansas", "new mexico",   "alabama","georgia", "indiana","iowa", "kentucky", "ohio", "pennsylvania" ,"tennessee","west virginia","arkansas", "colorado"    , "florida" , "louisiana" ,"michigan" ,"minnesota" , "mississippi"   , "missouri", "north carolina" ,"oklahoma" ,"oregon" , "south dakota", "wisconsin","south carolina" ,"maryland" , "new york", "virginia" , "montana" ,"california" , "nebraska" , "maine", "new jersey" , "idaho" ,"washington" , "massachusetts" ,"vermont" ,"nevada", "wyoming","utah", "new hampshire" ,"north dakota","rhode island" , "delaware","connecticut","district of columbia", "arizona"  ))
+counties_floyd <- map_data("county", counties_f)
+state_floyd <- map_data("state", counties_f)
+```
+
+```{r}
+
+# Add the longitude and latitude information
+public<- left_join(counties_floyd, public,
+                          by = c("region", "subregion"))
+```
+
+
+
